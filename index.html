@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบสร้าง QR Code PRO</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; }
+    .bg-gradient-header { background: radial-gradient(circle at 50% 0%, #e0e7ff 0%, #f8fafc 100%); }
+    .icon-svg { width: 1.25rem; height: 1.25rem; display: inline-block; vertical-align: middle; }
+  </style>
+</head>
+<body class="text-slate-700 min-h-screen flex flex-col justify-between">
+
+  <!-- ==================== TOP NAVIGATION ==================== -->
+  <header id="mainHeader" class="bg-white border-b border-slate-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchPage('home')">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-100">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-800 text-lg leading-tight">ระบบสร้าง QR Code</span>
+            <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded">PRO</span>
+          </div>
+          <p class="text-xs text-slate-400">สร้าง QR Code ได้ง่าย รวดเร็ว และปลอดภัย</p>
+        </div>
+      </div>
+
+      <!-- ปุ่มเข้าสู่ระบบผู้ดูแลระบบ (ขวาบน) -->
+      <div class="relative">
+        <button id="navUserBtn" onclick="handleUserBtnClick()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200 hover:bg-slate-50 transition text-xs font-semibold text-slate-700 shadow-sm cursor-pointer">
+          <div class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </div>
+          <span id="navUserLabel">ผู้ดูแลระบบ</span>
+          <svg id="navChevron" class="w-3.5 h-3.5 text-slate-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+
+        <!-- Dropdown ของ Admin -->
+        <div id="adminDropdown" class="hidden absolute right-0 mt-2 w-52 bg-white border border-slate-100 rounded-2xl shadow-2xl py-2 z-50 text-xs">
+          <div class="px-4 py-2 border-b border-slate-100">
+            <div class="font-bold text-slate-800">ผู้ดูแลระบบ</div>
+            <div class="text-[11px] text-emerald-600 flex items-center gap-1 mt-0.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> กำลังใช้งาน (Online)
+            </div>
+          </div>
+          <button onclick="switchPage('dashboard'); closeDropdown();" class="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-2 text-slate-700 font-medium">
+            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            สถิติการใช้งานระบบ
+          </button>
+          <button onclick="switchPage('home'); closeDropdown();" class="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-2 text-slate-700 font-medium">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            หน้าสร้าง QR Code
+          </button>
+          <div class="border-t border-slate-100 my-1"></div>
+          <button onclick="handleLogout()" class="w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 flex items-center gap-2 font-semibold">
+            <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            ออกจากระบบ (Logout)
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 1. HOME / GENERATOR VIEW ==================== -->
+  <main id="page-home" class="flex-grow">
+    <!-- Hero Banner -->
+    <section class="bg-gradient-header pt-10 pb-8 text-center px-4">
+      <div class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-800 text-xs px-3 py-1 rounded-full mb-3">
+        <span class="text-amber-500">⚡</span> ใช้งานได้ทันที • สะดวกทุกการแชร์
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">ระบบสร้าง QR Code</h1>
+      <p class="text-slate-500 text-sm max-w-lg mx-auto mb-8">สร้าง QR Code ได้ง่าย รวดเร็ว และปลอดภัย ไม่มีโฆษณา</p>
+
+      <!-- Stat counters -->
+      <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400 font-medium">QR CODE ทั้งหมด</div>
+            <div class="text-xl font-bold text-slate-800"><span id="homeStatTotal">0</span> <span class="text-xs font-normal text-slate-400">รายการ</span></div>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400 font-medium">สแกนรวมทั้งหมด</div>
+            <div class="text-xl font-bold text-slate-800"><span id="homeStatScans">0</span> <span class="text-xs font-normal text-slate-400">ครั้ง</span></div>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400 font-medium">ใช้งานวันนี้</div>
+            <div class="text-xl font-bold text-slate-800"><span id="homeStatToday">0</span> <span class="text-xs font-normal text-slate-400">ครั้ง</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workspace Generator -->
+    <section class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Input Left -->
+      <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+            </div>
+            <h2 class="font-bold text-slate-800">สร้าง QR Code</h2>
+          </div>
+          <button onclick="resetGeneratorForm()" class="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 cursor-pointer">
+            ล้างข้อมูล
+          </button>
+        </div>
+
+        <label class="block text-xs font-semibold text-slate-700 mb-2 uppercase tracking-wider">ประเภท QR CODE</label>
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6">
+          <!-- 1. Website -->
+          <button type="button" onclick="selectType('Website', this)" class="type-btn p-3 rounded-xl border border-indigo-600 bg-indigo-50/50 text-indigo-700 flex flex-col items-center gap-1.5 text-xs font-medium cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            เว็บไซต์
+          </button>
+          
+          <!-- 2. Google Form -->
+          <button type="button" onclick="selectType('Google Form', this)" class="type-btn p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 flex flex-col items-center gap-1.5 text-xs font-medium cursor-pointer">
+            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Google Form
+          </button>
+          
+          <!-- 3. YouTube -->
+          <button type="button" onclick="selectType('YouTube', this)" class="type-btn p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 flex flex-col items-center gap-1.5 text-xs font-medium cursor-pointer">
+            <svg class="w-5 h-5 text-red-600" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            YouTube
+          </button>
+
+          <!-- 4. LINE -->
+          <button type="button" onclick="selectType('LINE', this)" class="type-btn p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 flex flex-col items-center gap-1.5 text-xs font-medium cursor-pointer">
+            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            LINE
+          </button>
+
+          <!-- 5. Wi-Fi -->
+          <button type="button" onclick="selectType('Wi-Fi', this)" class="type-btn p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 flex flex-col items-center gap-1.5 text-xs font-medium cursor-pointer">
+            <svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+            Wi-Fi
+          </button>
+
+          <!-- 6. Text -->
+          <button type="button" onclick="selectType('Text', this)" class="type-btn p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 flex flex-col items-center gap-1.5 text-xs font-medium cursor-pointer">
+            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+            ข้อความ
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">ชื่อรายการ (ไม่บังคับ)</label>
+            <input id="qrTitleInput" type="text" placeholder="เช่น แบบประเมินกิจกรรมวันวิทยาศาสตร์" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition" />
+          </div>
+
+          <div id="urlFieldContainer">
+            <label id="urlFieldLabel" class="block text-xs font-medium text-slate-700 mb-1">URL เว็บไซต์</label>
+            <input id="qrContentInput" type="text" placeholder="https://example.com" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono text-slate-600 transition" oninput="renderLiveQR()" />
+            <p id="urlFieldHint" class="text-[11px] text-slate-400 mt-1">วางลิงก์ที่ต้องการให้ผู้ใช้เปิดหลังสแกน</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-2 uppercase tracking-wider">รูปแบบและสี</label>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-slate-500 mb-1 font-medium">สี QR</label>
+                <div class="flex items-center gap-2 border border-slate-200 rounded-xl p-1.5 px-3">
+                  <input id="qrColorPicker" type="color" value="#172554" class="w-6 h-6 border-0 rounded cursor-pointer" onchange="updateColorText('qrColorPicker', 'qrColorText'); renderLiveQR();" />
+                  <input id="qrColorText" type="text" value="#172554" class="text-xs uppercase font-mono w-full focus:outline-none" readonly />
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-500 mb-1 font-medium">สีพื้นหลัง</label>
+                <div class="flex items-center gap-2 border border-slate-200 rounded-xl p-1.5 px-3">
+                  <input id="bgColorPicker" type="color" value="#ffffff" class="w-6 h-6 border-0 rounded cursor-pointer" onchange="updateColorText('bgColorPicker', 'bgColorText'); renderLiveQR();" />
+                  <input id="bgColorText" type="text" value="#FFFFFF" class="text-xs uppercase font-mono w-full focus:outline-none" readonly />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button id="btnSaveQR" onclick="saveAndGenerateShortLink()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition shadow-md shadow-indigo-100 mt-4 cursor-pointer">
+            บันทึกและสร้างลิงก์ย่อลง Google Sheets
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Preview Right -->
+      <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <h2 class="font-bold text-slate-800 text-sm">ตัวอย่าง QR Code</h2>
+            </div>
+            <span class="text-[10px] bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded">PREVIEW</span>
+          </div>
+
+          <div class="border-2 border-dashed border-indigo-100 rounded-2xl p-8 flex flex-col items-center justify-center bg-slate-50/50 min-h-[280px]">
+            <div id="qrcode" class="p-3 bg-white rounded-xl shadow-sm transition"></div>
+            <div class="mt-4 text-center">
+              <h4 id="previewTitle" class="font-semibold text-slate-800 text-sm">QR Code ของคุณ</h4>
+              <p class="text-xs text-slate-400 mt-0.5">กรอกข้อมูลด้านซ้ายเพื่อดูตัวอย่าง</p>
+            </div>
+          </div>
+
+          <div id="shortLinkResultBox" class="hidden mt-4 p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl">
+            <label class="block text-[11px] font-semibold text-indigo-700 mb-1">ลิงก์ย่อพร้อมใช้งาน (บันทึกใน Sheet เรียบร้อย):</label>
+            <div class="flex items-center gap-2">
+              <input id="generatedShortLinkInput" type="text" class="w-full text-xs font-mono bg-white border border-indigo-200 rounded-lg px-2.5 py-1.5 text-slate-700 focus:outline-none" readonly />
+              <button onclick="copyGeneratedLink()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium shrink-0 flex items-center gap-1 cursor-pointer">
+                คัดลอก
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 mt-6">
+            <button onclick="downloadQR('png')" class="py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium text-xs flex flex-col items-center justify-center transition shadow-sm cursor-pointer">
+              <span class="font-bold text-sm">PNG</span>
+              <span class="text-[10px] text-indigo-200">เหมาะสำหรับทั่วไป</span>
+            </button>
+            <button onclick="downloadQR('svg')" class="py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-xs flex flex-col items-center justify-center transition shadow-sm cursor-pointer">
+              <span class="font-bold text-sm">SVG</span>
+              <span class="text-[10px] text-blue-100">คมชัดสำหรับงานพิมพ์</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-amber-50/70 border border-amber-200/60 rounded-xl flex items-center gap-2 text-[11px] text-amber-800">
+          <span>⚠️ แนะนำ: กดบันทึกเพื่อรับลิงก์ย่อและบันทึกสถิติลง Sheet</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== 2. ADMIN LOGIN VIEW ==================== -->
+  <main id="page-login" class="hidden flex-grow py-8 px-4 flex flex-col justify-between">
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="flex items-center justify-between mb-5">
+        <button onclick="switchPage('home')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-200 px-4 py-2 rounded-full transition shadow-sm cursor-pointer">
+          ← กลับสู่หน้าระบบสร้าง QR Code
+        </button>
+
+        <div class="flex items-center gap-3">
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> v2.4 Live System
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full">
+            SSL 256-bit Encrypted
+          </span>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 grid grid-cols-1 lg:grid-cols-12">
+        <div class="lg:col-span-7 bg-slate-50/70 p-8 md:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-slate-100">
+          <div>
+            <div class="flex items-center gap-2.5 mb-5">
+              <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-slate-800 text-base">ระบบสร้าง QR Code</span>
+                  <span class="text-[10px] bg-indigo-600 text-white px-1.5 py-0.2 rounded font-bold">PRO</span>
+                </div>
+                <div class="text-[11px] text-slate-400">สร้าง QR Code ได้ง่าย รวดเร็ว และปลอดภัย ไม่มีโฆษณา</div>
+              </div>
+            </div>
+
+            <div class="inline-block text-[11px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-lg mb-3 tracking-wider">
+              ADMINISTRATION & ANALYTICS HUB
+            </div>
+            
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+              ระบบจัดการและศูนย์ควบคุมสถิติอัจฉริยะ
+            </h2>
+            <p class="text-xs text-slate-500 leading-relaxed mb-8">
+              บริหารจัดการแคมเปญ QR Code แบบรวมศูนย์ ตรวจสอบประสิทธิภาพการสแกน และปรับเปลี่ยนข้อมูลปลายทางได้แบบเรียลไทม์ พร้อมความปลอดภัยระดับสูงสุด
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                <div class="font-bold text-slate-800 text-xs">วิเคราะห์สถิติเรียลไทม์</div>
+                <p class="text-[11px] text-slate-400 mt-1 leading-snug">ติดตามยอดสแกน ความถี่ และอุปกรณ์ผู้ใช้งานจาก Google Sheets ทันที</p>
+              </div>
+              <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                <div class="font-bold text-slate-800 text-xs">รองรับหลากหลายประเภท</div>
+                <p class="text-[11px] text-slate-400 mt-1 leading-snug">ทั้งลิงก์เว็บไซต์, Google Form, YouTube, Wi-Fi, บัญชี LINE และข้อความ</p>
+              </div>
+              <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                <div class="font-bold text-slate-800 text-xs">ความปลอดภัยระดับสูง</div>
+                <p class="text-[11px] text-slate-400 mt-1 leading-snug">เข้ารหัส SSL 256-bit พร้อมระบบสิทธิ์ผู้ดูแลระบบที่ปลอดภัย</p>
+              </div>
+              <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                <div class="font-bold text-slate-800 text-xs">ดาวน์โหลดคุณภาพสูง</div>
+                <p class="text-[11px] text-slate-400 mt-1 leading-snug">รองรับทั้งไฟล์ภาพ PNG และเวกเตอร์ SVG สำหรับงานพิมพ์ความละเอียดสูง</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 pt-6 mt-6 border-t border-slate-200/60">
+            <div class="bg-white p-3 rounded-xl border border-slate-100">
+              <div class="text-[10px] text-slate-400">ความเสถียร</div>
+              <div class="font-bold text-slate-800 text-xs">99.9% Uptime</div>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-slate-100">
+              <div class="text-[10px] text-slate-400">ยอดใช้งานรวม</div>
+              <div class="font-bold text-indigo-600 text-xs" id="loginSummaryScans">0 สแกน</div>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-slate-100">
+              <div class="text-[10px] text-slate-400">การปกป้อง</div>
+              <div class="font-bold text-emerald-600 text-xs">ปลอดภัย 100%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login Form Right -->
+        <div class="lg:col-span-5 p-8 md:p-10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              </div>
+              <span class="text-[11px] text-slate-500 bg-slate-100 px-3 py-1 rounded-full font-medium">เฉพาะผู้ดูแลระบบ</span>
+            </div>
+
+            <h3 class="text-xl font-extrabold text-slate-900 mb-1">เข้าสู่ระบบผู้ดูแลระบบ</h3>
+            <p class="text-xs text-slate-400 mb-6">กรุณากรอกชื่อผู้ใช้และรหัสผ่านเพื่อเข้าสู่ระบบจัดการและดูสถิติการใช้งาน</p>
+
+            <form id="adminLoginForm" onsubmit="handleLogin(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">ชื่อผู้ใช้ <span class="text-red-500">*</span></label>
+                <input id="loginUsername" type="text" placeholder="กรอกชื่อผู้ใช้ของคุณ" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">รหัสผ่าน (Password) <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <input id="loginPassword" type="password" placeholder="••••••••••••" required class="w-full px-3.5 pr-10 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition" />
+                  <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 cursor-pointer">
+                    👁️
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 text-xs text-slate-600">
+                <input type="checkbox" id="rememberMe" checked class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
+                <label for="rememberMe" class="cursor-pointer">จดจำการเข้าสู่ระบบ 30 วัน</label>
+              </div>
+
+              <div class="p-3 bg-indigo-50/50 rounded-xl border border-indigo-100/60 text-xs text-indigo-900">
+                ระบบเชื่อมต่อ API โดยตรงกับ Google Sheets เพื่อตรวจสอบสิทธิ์
+              </div>
+
+              <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-indigo-100 cursor-pointer">
+                เข้าสู่ระบบ (Sign In) →
+              </button>
+            </form>
+          </div>
+
+          <div class="mt-8 pt-4 border-t border-slate-100 space-y-3">
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 text-[11px] text-slate-500">
+              🔒 ระบบความปลอดภัย SSL 256-Bit เข้ารหัสขั้นสูงเพื่อปกป้องข้อมูลผู้ดูแลระบบ
+            </div>
+            <div class="flex items-center justify-between text-[10px] text-slate-400">
+              <div>© 2026 QR Code Generator Pro. All rights reserved.</div>
+              <div class="text-emerald-600 font-medium">● Secure Portal v2.4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== 3. ADMIN DASHBOARD VIEW ==================== -->
+  <main id="page-dashboard" class="hidden flex-grow max-w-7xl mx-auto px-4 py-6 w-full">
+    <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 gap-4">
+      <div>
+        <div class="flex items-center gap-2 text-xs text-indigo-600 font-semibold mb-1">
+          <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></span> ระบบวิเคราะห์สถิติสดจาก Google Sheets
+        </div>
+        <h2 class="text-2xl font-bold text-slate-900">สถิติและภาพรวมระบบ</h2>
+        <p class="text-xs text-slate-400">วิเคราะห์ข้อมูลการใช้งานและการสร้าง QR Code แบบเรียลไทม์</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="fetchSheetData()" class="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3.5 py-2.5 rounded-xl font-medium transition cursor-pointer">
+          🔄 รีเฟรชข้อมูล
+        </button>
+        <button onclick="exportCSVReport()" class="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-4 py-2.5 rounded-xl font-medium transition shadow-sm shadow-indigo-100 cursor-pointer">
+          📥 ส่งออกรายงาน (CSV)
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 Key Stat Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-medium">QR Code ทั้งหมด</div>
+          <div class="text-2xl font-bold text-slate-800 mt-1" id="dashTotalQR">0</div>
+          <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded mt-1 inline-block">ข้อมูลจริงใน Sheet</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-medium">ยอดการสแกนรวม</div>
+          <div class="text-2xl font-bold text-slate-800 mt-1" id="dashTotalScans">0</div>
+          <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded mt-1 inline-block">สแกนสะสมทั้งหมด</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-medium">สร้างวันนี้</div>
+          <div class="text-2xl font-bold text-slate-800 mt-1" id="dashTodayUsers">0</div>
+          <span class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded mt-1 inline-block">วันนี้ (24 ชม.)</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-medium">ประเภทยอดนิยม</div>
+          <div class="text-2xl font-bold text-slate-800 mt-1" id="dashTopType">-</div>
+          <span class="text-[10px] text-indigo-600 font-medium" id="dashTopTypeSub">คำนวณจากข้อมูลจริง</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+      <div class="lg:col-span-8 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm">แนวโน้มการสร้างและยอดสแกน 7 วันล่าสุด</h3>
+            <p class="text-[11px] text-slate-400">ข้อมูลจากแผ่นงาน DailyStats</p>
+          </div>
+        </div>
+        <div class="h-64">
+          <canvas id="dailyBarChart"></canvas>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+        <div>
+          <h3 class="font-bold text-slate-800 text-sm">สัดส่วนประเภท QR Code</h3>
+          <p class="text-[11px] text-slate-400 mb-4">คำนวณเปอร์เซ็นต์ตามรายการใน Sheet จริง</p>
+          <div class="space-y-3 text-xs" id="typeRatioContainer"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div>
+          <h3 class="font-bold text-slate-800 text-sm">กิจกรรม QR Code ในชีต</h3>
+          <p class="text-[11px] text-slate-400">รายการ QR Code ที่ถูกบันทึกจริงในฐานข้อมูล</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input id="tableSearchInput" oninput="filterQRTable()" type="text" placeholder="ค้นหาชื่อ, ผู้สร้าง..." class="text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 w-52" />
+          <select id="typeFilterSelect" onchange="filterQRTable()" class="text-xs border border-slate-200 rounded-xl px-3 py-2 focus:outline-none font-medium text-slate-600">
+            <option value="ALL">ประเภท: ทั้งหมด</option>
+            <option value="Website">Website</option>
+            <option value="Google Form">Google Form</option>
+            <option value="YouTube">YouTube</option>
+            <option value="LINE">LINE</option>
+            <option value="Wi-Fi">Wi-Fi</option>
+            <option value="Text">Text</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="text-slate-400 border-b border-slate-100">
+              <th class="py-3 px-4 font-medium">ชื่อ / หัวข้อ</th>
+              <th class="py-3 px-4 font-medium">ผู้สร้าง</th>
+              <th class="py-3 px-4 font-medium">ประเภท</th>
+              <th class="py-3 px-4 font-medium">ลิงก์ย่อ</th>
+              <th class="py-3 px-4 font-medium">วันที่สร้าง</th>
+              <th class="py-3 px-4 font-medium">ยอดสแกน</th>
+              <th class="py-3 px-4 font-medium">สถานะ</th>
+              <th class="py-3 px-4 font-medium text-right">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="qrTableBody" class="divide-y divide-slate-50 text-slate-600 font-medium">
+            <tr>
+              <td colspan="8" class="text-center py-8 text-slate-400">กำลังโหลดข้อมูลจาก Google Sheets...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center justify-between pt-4 mt-2 border-t border-slate-100 text-xs text-slate-400">
+        <div>แสดง <span id="pagCount">0</span> รายการ</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-slate-100 py-4 px-4 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>© 2026 ระบบสร้าง QR Code. สงวนลิขสิทธิ์ทั้งหมด.</div>
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-slate-600">เงื่อนไขการใช้งาน</a>
+        <a href="#" class="hover:text-slate-600">นโยบายความเป็นส่วนตัว</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // ⚠️ นำ Web App URL ของคุณมาใส่ที่ตัวแปรนี้
+    const GAS_API_URL = "ใส่_WEB_APP_URL_ที่ได้จาก_GAS_ที่นี่"; 
+
+    let currentType = 'Website';
+    let qrcodeObj = null;
+    let isAdminLoggedIn = false;
+    let qrDataList = [];
+    let appBaseUrl = GAS_API_URL;
+    let dailyChart = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initQR();
+      fetchSheetData();
+
+      document.addEventListener('click', (e) => {
+        const btn = document.getElementById('navUserBtn');
+        const menu = document.getElementById('adminDropdown');
+        if (btn && menu && !btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.add('hidden');
+        }
+      });
+    });
+
+    async function callGASApi(payload = null, actionName = null) {
+      if(GAS_API_URL.includes("ใส่_WEB_APP_URL")) {
+        console.error("กรุณาใส่ GAS_API_URL ก่อน");
+        return { success: false, error: "กรุณาใส่ Web App URL ในโค้ด" };
+      }
+
+      try {
+        if (actionName) {
+          const response = await fetch(`${GAS_API_URL}?action=${actionName}`);
+          return await response.json();
+        } else {
+          const response = await fetch(GAS_API_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+            },
+            body: JSON.stringify(payload)
+          });
+          return await response.json();
+        }
+      } catch (error) {
+        console.error("API Fetch Error:", error);
+        return { success: false, error: error.toString() };
+      }
+    }
+
+    async function fetchSheetData() {
+      const tbody = document.getElementById('qrTableBody');
+      if(tbody) tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400">กำลังโหลดข้อมูลจาก Google Sheets...</td></tr>`;
+
+      const res = await callGASApi(null, 'getDashboardData');
+      onSheetDataLoaded(res);
+    }
+
+    function onSheetDataLoaded(res) {
+      if (!res || !res.success) {
+        console.error(res?.error);
+        return;
+      }
+
+      if (res.appUrl) {
+        appBaseUrl = res.appUrl;
+      }
+
+      qrDataList = res.list || [];
+      const s = res.summary || {};
+
+      document.getElementById('homeStatTotal').innerText = s.totalQR || 0;
+      document.getElementById('homeStatScans').innerText = (s.totalScans || 0).toLocaleString();
+      document.getElementById('homeStatToday').innerText = s.todayUsers || 0;
+
+      const loginScanEl = document.getElementById('loginSummaryScans');
+      if (loginScanEl) loginScanEl.innerText = `${(s.totalScans || 0).toLocaleString()} สแกน`;
+
+      document.getElementById('dashTotalQR').innerText = (s.totalQR || 0).toLocaleString();
+      document.getElementById('dashTotalScans').innerText = (s.totalScans || 0).toLocaleString();
+      document.getElementById('dashTodayUsers').innerText = (s.todayUsers || 0).toLocaleString();
+
+      let topType = "-";
+      let topCount = 0;
+      if (s.typeMap) {
+        for (const [k, v] of Object.entries(s.typeMap)) {
+          if (v > topCount) { topCount = v; topType = k; }
+        }
+      }
+      document.getElementById('dashTopType').innerText = topType;
+      document.getElementById('dashTopTypeSub').innerText = topCount > 0 ? `${topCount} รายการ (${Math.round((topCount / (s.totalQR || 1)) * 100)}%)` : "ไม่มีข้อมูล";
+
+      renderTypeRatios(s.typeMap || {}, s.totalQR || 0);
+
+      if (s.chartData) {
+        renderDailyChart(s.chartData);
+      }
+
+      renderQRTable(qrDataList);
+    }
+
+    function renderTypeRatios(typeMap, total) {
+      const container = document.getElementById('typeRatioContainer');
+      container.innerHTML = '';
+      if (total === 0) {
+        container.innerHTML = '<div class="text-slate-400 py-4 text-center">ยังไม่มีข้อมูลในชีต</div>';
+        return;
+      }
+
+      const colors = {
+        'Website': 'bg-indigo-600',
+        'Google Form': 'bg-purple-500',
+        'YouTube': 'bg-red-500',
+        'LINE': 'bg-emerald-500',
+        'Wi-Fi': 'bg-sky-500',
+        'Text': 'bg-amber-500'
+      };
+
+      for (const [tName, count] of Object.entries(typeMap)) {
+        const pct = Math.round((count / total) * 100) || 0;
+        const colorCls = colors[tName] || 'bg-slate-400';
+        
+        container.innerHTML += `
+          <div>
+            <div class="flex justify-between font-medium mb-1">
+              <span>${tName}</span>
+              <span>${pct}% (${count})</span>
+            </div>
+            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+              <div class="${colorCls} h-full rounded-full" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function renderDailyChart(cData) {
+      const ctx = document.getElementById('dailyBarChart').getContext('2d');
+      if (dailyChart) dailyChart.destroy();
+
+      dailyChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: cData.labels,
+          datasets: [
+            { label: 'สร้างใหม่', data: cData.created, backgroundColor: '#6366f1', borderRadius: 6 },
+            { label: 'สแกน', data: cData.scanned, backgroundColor: '#e879f9', borderRadius: 6 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { stepSize: 1, font: { family: 'Prompt', size: 10 } } },
+            x: { grid: { display: false }, ticks: { font: { family: 'Prompt', size: 11 } } }
+          }
+        }
+      });
+    }
+
+    function switchPage(page) {
+      document.getElementById('page-home').classList.add('hidden');
+      document.getElementById('page-login').classList.add('hidden');
+      document.getElementById('page-dashboard').classList.add('hidden');
+
+      if (page === 'home') {
+        document.getElementById('page-home').classList.remove('hidden');
+      } else if (page === 'login') {
+        document.getElementById('page-login').classList.remove('hidden');
+      } else if (page === 'dashboard') {
+        if (!isAdminLoggedIn) {
+          switchPage('login');
+          return;
+        }
+        document.getElementById('page-dashboard').classList.remove('hidden');
+        fetchSheetData();
+      }
+    }
+
+    function handleUserBtnClick() {
+      if (isAdminLoggedIn) {
+        document.getElementById('adminDropdown').classList.toggle('hidden');
+      } else {
+        switchPage('login');
+      }
+    }
+
+    function closeDropdown() {
+      document.getElementById('adminDropdown').classList.add('hidden');
+    }
+
+    function handleLogout() {
+      isAdminLoggedIn = false;
+      closeDropdown();
+      document.getElementById('navChevron').classList.add('hidden');
+      document.getElementById('navUserLabel').innerText = 'ผู้ดูแลระบบ';
+      switchPage('home');
+      alert('ออกจากระบบเรียบร้อยแล้ว');
+    }
+
+    // ====== ฟังก์ชัน Login แบบตรวจสอบกับ API (แก้ไขใหม่) ======
+    async function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById('loginUsername').value;
+      const p = document.getElementById('loginPassword').value;
+      const btn = e.target.querySelector('button[type="submit"]');
+
+      // เปลี่ยนสถานะปุ่มตอนกำลังโหลด
+      btn.disabled = true;
+      btn.innerText = 'กำลังตรวจสอบ...';
+
+      // เรียก API โดยส่งข้อมูลไปให้ backend ตรวจสอบกับ Script Properties
+      const res = await callGASApi({ action: 'login', username: u, password: p });
+
+      // คืนค่าปุ่มกลับเหมือนเดิม
+      btn.disabled = false;
+      btn.innerText = 'เข้าสู่ระบบ (Sign In) →';
+
+      if (res && res.success) {
+        isAdminLoggedIn = true;
+        document.getElementById('navChevron').classList.remove('hidden');
+        document.getElementById('navUserLabel').innerText = 'ผู้ดูแลระบบ';
+        
+        // ล้างช่องรหัสผ่านเพื่อความปลอดภัย
+        document.getElementById('loginPassword').value = '';
+        
+        switchPage('dashboard');
+      } else {
+        alert(res.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อระบบ');
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const pwd = document.getElementById('loginPassword');
+      pwd.type = pwd.type === 'password' ? 'text' : 'password';
+    }
+
+    function initQR() {
+      const container = document.getElementById("qrcode");
+      container.innerHTML = "";
+      qrcodeObj = new QRCode(container, {
+        text: "https://example.com",
+        width: 170,
+        height: 170,
+        colorDark: "#172554",
+        colorLight: "#FFFFFF",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function renderLiveQR() {
+      const input = document.getElementById('qrContentInput').value.trim() || "https://example.com";
+      const darkColor = document.getElementById('qrColorPicker').value;
+      const lightColor = document.getElementById('bgColorPicker').value;
+      const title = document.getElementById('qrTitleInput').value.trim();
+
+      document.getElementById('previewTitle').innerText = title || "QR Code ของคุณ";
+
+      const container = document.getElementById("qrcode");
+      container.innerHTML = "";
+      qrcodeObj = new QRCode(container, {
+        text: input,
+        width: 170,
+        height: 170,
+        colorDark: darkColor,
+        colorLight: lightColor,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function selectType(type, btnEl) {
+      currentType = type;
+      document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.classList.remove('border-indigo-600', 'bg-indigo-50/50', 'text-indigo-700');
+        btn.classList.add('border-slate-200', 'text-slate-600');
+      });
+      if (btnEl) {
+        btnEl.classList.add('border-indigo-600', 'bg-indigo-50/50', 'text-indigo-700');
+        btnEl.classList.remove('border-slate-200', 'text-slate-600');
+      }
+
+      const label = document.getElementById('urlFieldLabel');
+      const input = document.getElementById('qrContentInput');
+      if (type === 'Wi-Fi') {
+        label.innerText = 'ชื่อเครือข่าย Wi-Fi / ข้อมูลเชื่อมต่อ';
+        input.placeholder = 'WIFI:S:MySSID;T:WPA;P:MyPassword;;';
+      } else if (type === 'Text') {
+        label.innerText = 'ข้อความที่ต้องการแสดง';
+        input.placeholder = 'พิมพ์ข้อความที่ต้องการ...';
+      } else {
+        label.innerText = `URL ${type}`;
+        input.placeholder = 'https://example.com';
+      }
+      renderLiveQR();
+    }
+
+    function updateColorText(pickerId, textId) {
+      document.getElementById(textId).value = document.getElementById(pickerId).value.toUpperCase();
+    }
+
+    function resetGeneratorForm() {
+      document.getElementById('qrTitleInput').value = '';
+      document.getElementById('qrContentInput').value = '';
+      document.getElementById('qrColorPicker').value = '#172554';
+      document.getElementById('qrColorText').value = '#172554';
+      document.getElementById('bgColorPicker').value = '#FFFFFF';
+      document.getElementById('bgColorText').value = '#FFFFFF';
+      document.getElementById('shortLinkResultBox').classList.add('hidden');
+      renderLiveQR();
+    }
+
+    async function saveAndGenerateShortLink() {
+      const name = document.getElementById('qrTitleInput').value.trim() || "QR Code " + currentType;
+      const targetUrl = document.getElementById('qrContentInput').value.trim();
+
+      if (!targetUrl) {
+        alert("กรุณากรอกลิงก์หรือข้อมูลปลายทางก่อนสร้าง QR Code");
+        return;
+      }
+
+      const btn = document.getElementById('btnSaveQR');
+      btn.disabled = true;
+      btn.innerText = `กำลังบันทึกลง Google Sheets...`;
+
+      const payload = {
+        name: name,
+        type: currentType,
+        targetUrl: targetUrl,
+        qrColor: document.getElementById('qrColorPicker').value,
+        bgColor: document.getElementById('bgColorPicker').value,
+        creator: "ผู้ใช้งานทั่วไป"
+      };
+
+      const res = await callGASApi({ action: 'create', payload: payload });
+      
+      btn.disabled = false;
+      btn.innerText = `บันทึกและสร้างลิงก์ย่อลง Google Sheets`;
+
+      if (res.success) {
+        const base = res.appUrl || appBaseUrl;
+        const shortUrl = `${base}?s=${res.shortCode}`;
+        document.getElementById('generatedShortLinkInput').value = shortUrl;
+        document.getElementById('shortLinkResultBox').classList.remove('hidden');
+
+        const container = document.getElementById("qrcode");
+        container.innerHTML = "";
+        new QRCode(container, {
+          text: shortUrl,
+          width: 170,
+          height: 170,
+          colorDark: document.getElementById('qrColorPicker').value,
+          colorLight: document.getElementById('bgColorPicker').value,
+          correctLevel: QRCode.CorrectLevel.H
+        });
+
+        alert("บันทึกลง Google Sheets และสร้างลิงก์ย่อเรียบร้อยแล้ว!");
+        fetchSheetData();
+      } else {
+        alert("บันทึกไม่สำเร็จ: " + res.error);
+      }
+    }
+
+    function copyGeneratedLink() {
+      const input = document.getElementById('generatedShortLinkInput');
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => alert("คัดลอกลิงก์ย่อเรียบร้อยแล้ว!"));
+    }
+
+    function downloadQR(format) {
+      const img = document.querySelector('#qrcode img');
+      if (!img) return;
+      if (format === 'png') {
+        const a = document.createElement('a');
+        a.href = img.src;
+        a.download = `qrcode_${Date.now()}.png`;
+        a.click();
+      } else if (format === 'svg') {
+        const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><image href="${img.src}" height="300" width="300"/></svg>`;
+        const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `qrcode_${Date.now()}.svg`;
+        a.click();
+      }
+    }
+
+    function renderQRTable(dataList) {
+      const tbody = document.getElementById('qrTableBody');
+      tbody.innerHTML = '';
+      document.getElementById('pagCount').innerText = dataList.length;
+
+      if (dataList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400">ยังไม่มีรายการ QR Code ในชีต เริ่มสร้างได้ที่หน้าแรกเลยครับ</td></tr>`;
+        return;
+      }
+
+      dataList.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50/80 transition";
+
+        const typeBadges = {
+          'Website': 'bg-blue-50 text-blue-600',
+          'Google Form': 'bg-purple-50 text-purple-600',
+          'YouTube': 'bg-red-50 text-red-600',
+          'LINE': 'bg-emerald-50 text-emerald-600',
+          'Wi-Fi': 'bg-sky-50 text-sky-600',
+          'Text': 'bg-amber-50 text-amber-600'
+        };
+
+        const shortLink = `${appBaseUrl}?s=${item.shortCode}`;
+        const statusBadge = item.status === 'Active'
+          ? '<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active</span>'
+          : '<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Paused</span>';
+
+        tr.innerHTML = `
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-800 text-xs">${item.name}</div>
+            <div class="text-[11px] text-slate-400 font-mono truncate max-w-xs">${item.targetUrl}</div>
+          </td>
+          <td class="py-3 px-4 text-xs">${item.creator}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${typeBadges[item.type] || 'bg-slate-100 text-slate-600'}">
+              ${item.type}
+            </span>
+          </td>
+          <td class="py-3 px-4 font-mono text-indigo-600 hover:underline">
+            <a href="${shortLink}" target="_blank">${shortLink}</a>
+          </td>
+          <td class="py-3 px-4 text-xs">${item.createdAt}</td>
+          <td class="py-3 px-4 font-bold text-slate-800 text-xs">${Number(item.scanCount || 0).toLocaleString()}</td>
+          <td class="py-3 px-4 cursor-pointer" onclick="toggleStatus('${item.id}', '${item.status}')">${statusBadge}</td>
+          <td class="py-3 px-4 text-right space-x-1">
+            <button onclick="navigator.clipboard.writeText('${shortLink}').then(()=>alert('คัดลอกลิงก์ย่อแล้ว'))" class="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-indigo-600 cursor-pointer" title="คัดลอกลิงก์">📋</button>
+            <button onclick="deleteQR('${item.id}')" class="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-red-600 cursor-pointer" title="ลบรายการ">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function toggleStatus(id, currentStatus) {
+      const newStatus = currentStatus === 'Active' ? 'Paused' : 'Active';
+      const res = await callGASApi({ action: 'updateStatus', id: id, newStatus: newStatus });
+      if(res.success) fetchSheetData();
+    }
+
+    async function deleteQR(id) {
+      if (confirm('ยืนยันการลบรายการนี้ออกจาก Google Sheets?')) {
+        const res = await callGASApi({ action: 'delete', id: id });
+        if(res.success) fetchSheetData();
+      }
+    }
+
+    function filterQRTable() {
+      const q = document.getElementById('tableSearchInput').value.toLowerCase();
+      const type = document.getElementById('typeFilterSelect').value;
+
+      const filtered = qrDataList.filter(item => {
+        const matchesSearch = (item.name || '').toLowerCase().includes(q) || (item.creator || '').toLowerCase().includes(q);
+        const matchesType = (type === 'ALL' || item.type === type);
+        return matchesSearch && matchesType;
+      });
+
+      renderQRTable(filtered);
+    }
+
+    function exportCSVReport() {
+      if (qrDataList.length === 0) {
+        alert("ไม่มีข้อมูลที่จะส่งออก");
+        return;
+      }
+      let csv = "ID,Name,Type,Target URL,Short Code,Creator,Date,Scans,Status\n";
+      qrDataList.forEach(r => {
+        csv += `"${r.id}","${r.name}","${r.type}","${r.targetUrl}","${r.shortCode}","${r.creator}","${r.createdAt}","${r.scanCount}","${r.status}"\n`;
+      });
+      const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `QR_Report_${Date.now()}.csv`;
+      a.click();
+    }
+  </script>
+</body>
+</html>
