@@ -16,6 +16,9 @@
   <!-- QR Code Styling Library (แทนที่ qrcode.js เพื่อรองรับ Logo และรูปทรงต่างๆ) -->
   <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
   
+  <!-- HTML2Canvas สำหรับการดาวน์โหลดรูปภาพพร้อมกรอบและข้อความเชิญชวน -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -191,8 +194,9 @@
             <label class="block text-xs font-bold text-slate-400 mb-4 uppercase tracking-widest">2. ระบุข้อมูล</label>
             
             <div class="mb-5">
-              <label class="block text-sm font-semibold text-slate-700 mb-1.5">ชื่ออ้างอิง QR Code (ให้แอดมินจำได้)</label>
-              <input id="qrTitleInput" type="text" placeholder="เช่น แคมเปญลดราคาเดือน 10" class="w-full text-base px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition shadow-sm" />
+              <label class="block text-sm font-semibold text-slate-700 mb-1.5">ข้อความเชิญชวน (Scan Me) / ชื่ออ้างอิง</label>
+              <input id="qrTitleInput" type="text" placeholder="เช่น Scan Me!, เพิ่มเพื่อน, หรือ แคมเปญลดราคา" class="w-full text-base px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition shadow-sm" oninput="renderLiveQR()" />
+              <p class="text-[11px] text-slate-500 mt-1.5 font-medium">💡 ข้อความนี้จะแสดงบนกรอบรูป QR Code ด้านขวา และใช้เป็นชื่ออ้างอิงในระบบ</p>
             </div>
 
             <!-- Standard URL Input -->
@@ -278,6 +282,17 @@
                 </div>
               </div>
 
+              <!-- Frame -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">กรอบและข้อความ (Frame & CTA)</label>
+                <select id="frameStyleSelect" onchange="renderLiveQR()" class="w-full text-sm px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 shadow-sm">
+                  <option value="none">ไม่มีกรอบ (เฉพาะ QR Code)</option>
+                  <option value="basic">แบบคลาสสิก (มีกรอบ, ข้อความด้านล่าง)</option>
+                  <option value="primary">แบบพรีเมียม (สีทึบ, พื้นหลังตามสี QR)</option>
+                  <option value="badge">แบบป้ายกำกับ (กรอบสีเส้น, ข้อความลอย)</option>
+                </select>
+              </div>
+
               <!-- Logo -->
               <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">แทรกโลโก้ตรงกลาง (Logo)</label>
@@ -341,9 +356,19 @@
             </div>
           </div>
 
-          <!-- QR Canvas -->
-          <div class="border-2 border-dashed border-slate-200 rounded-3xl p-6 flex flex-col items-center justify-center bg-slate-50/50 min-h-[320px] relative overflow-hidden group">
-            <div id="qrcode" class="bg-white p-3 rounded-2xl shadow-sm transition-transform group-hover:scale-105 duration-300"></div>
+          <!-- QR Canvas with Frame Feature -->
+          <div class="border-2 border-dashed border-slate-200 rounded-3xl p-4 flex flex-col items-center justify-center bg-slate-50/50 min-h-[360px] relative group overflow-hidden">
+            
+            <!-- จุดที่จะถูก Capture เป็นรูปภาพเมื่อดาวน์โหลด PNG -->
+            <div id="qrCaptureArea" class="flex items-center justify-center p-4 w-full h-full">
+              <div id="qrFrameDisplay" class="relative inline-flex flex-col items-center justify-center transition-all duration-300">
+                <div id="qrcodeWrapper" class="transition-all duration-300">
+                  <div id="qrcode" class="transition-transform duration-300"></div>
+                </div>
+                <div id="qrFrameBottomText" class="hidden text-center font-bold mt-3">Scan Me!</div>
+              </div>
+            </div>
+
           </div>
 
           <div class="mt-5 text-center">
@@ -353,13 +378,13 @@
 
           <!-- Action Buttons -->
           <div class="grid grid-cols-2 gap-3 mt-6">
-            <button onclick="downloadQR('png')" class="py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-medium text-xs flex flex-col items-center justify-center transition shadow-md cursor-pointer">
+            <button onclick="downloadQR('png')" class="py-3 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-medium text-xs flex flex-col items-center justify-center transition shadow-md cursor-pointer">
               <span class="font-bold text-sm">ดาวน์โหลด PNG</span>
-              <span class="text-[10px] text-slate-300">รูปภาพปกติ</span>
+              <span class="text-[10px] text-slate-300 mt-0.5">ภาพปกติ (รวมกรอบ)</span>
             </button>
-            <button onclick="downloadQR('svg')" class="py-3 px-4 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 rounded-xl font-medium text-xs flex flex-col items-center justify-center transition cursor-pointer">
+            <button onclick="downloadQR('svg')" class="py-3 px-3 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 rounded-xl font-medium text-xs flex flex-col items-center justify-center transition cursor-pointer">
               <span class="font-bold text-sm">ดาวน์โหลด SVG</span>
-              <span class="text-[10px] text-slate-400">เวกเตอร์ คมชัด 100%</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">คมชัด (ไม่รวมกรอบ)</span>
             </button>
           </div>
 
@@ -762,6 +787,75 @@
         cornersSquareOptions: { type: cornerStyle, color: darkColor },
         cornersDotOptions: { type: dotStyle === 'rounded' || dotStyle === 'dots' ? 'dot' : 'square' }
       });
+
+      updateFrameStyle(title, darkColor);
+    }
+
+    function updateFrameStyle(titleText, qrColor) {
+      const frameType = document.getElementById('frameStyleSelect').value;
+      const textToDisplay = titleText || "Scan Me!";
+      
+      const frameContainer = document.getElementById('qrFrameDisplay');
+      const textContainer = document.getElementById('qrFrameBottomText');
+      const qrcodeWrapper = document.getElementById('qrcodeWrapper');
+      
+      textContainer.innerText = textToDisplay;
+      
+      // Reset Default Classes
+      frameContainer.className = "relative inline-flex flex-col items-center justify-center transition-all duration-300";
+      qrcodeWrapper.className = "transition-all duration-300";
+      
+      if (frameType === 'none') {
+        textContainer.style.display = 'none';
+        frameContainer.style.backgroundColor = 'transparent';
+        frameContainer.style.padding = '0';
+        frameContainer.style.border = 'none';
+        frameContainer.style.boxShadow = 'none';
+        qrcodeWrapper.style.padding = '0';
+        qrcodeWrapper.style.backgroundColor = 'transparent';
+      } else if (frameType === 'basic') {
+        textContainer.style.display = 'block';
+        textContainer.style.color = '#1e293b'; // slate-800
+        textContainer.className = "text-center font-black mt-4 text-xl tracking-wide";
+        
+        frameContainer.style.backgroundColor = '#ffffff';
+        frameContainer.style.padding = '1.5rem';
+        frameContainer.style.border = '1.5px solid #e2e8f0'; // border-slate-200
+        frameContainer.style.borderRadius = '1.5rem';
+        frameContainer.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';
+        
+        qrcodeWrapper.style.padding = '0';
+        qrcodeWrapper.style.backgroundColor = 'transparent';
+      } else if (frameType === 'primary') {
+        textContainer.style.display = 'block';
+        textContainer.style.color = '#ffffff';
+        textContainer.className = "text-center font-black mt-5 text-2xl tracking-wider";
+        
+        frameContainer.style.backgroundColor = qrColor;
+        frameContainer.style.padding = '2rem 2rem 1.5rem 2rem';
+        frameContainer.style.border = 'none';
+        frameContainer.style.borderRadius = '2rem';
+        frameContainer.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+        
+        qrcodeWrapper.style.padding = '1rem';
+        qrcodeWrapper.style.backgroundColor = '#ffffff';
+        qrcodeWrapper.style.borderRadius = '1.5rem';
+      } else if (frameType === 'badge') {
+        textContainer.style.display = 'flex';
+        textContainer.style.color = '#ffffff';
+        textContainer.style.backgroundColor = qrColor;
+        textContainer.className = "absolute -bottom-4 left-1/2 -translate-x-1/2 text-base px-6 py-2.5 rounded-full font-black shadow-lg text-white whitespace-nowrap border-2 border-white tracking-wide";
+        
+        frameContainer.style.backgroundColor = '#ffffff';
+        frameContainer.style.padding = '1.5rem';
+        frameContainer.style.border = `4px solid ${qrColor}`;
+        frameContainer.style.borderRadius = '1.75rem';
+        frameContainer.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+        frameContainer.style.marginBottom = '1.5rem'; // เผื่อพื้นที่ให้ Badge
+        
+        qrcodeWrapper.style.padding = '0';
+        qrcodeWrapper.style.backgroundColor = 'transparent';
+      }
     }
 
     function buildVCardAndRender() {
@@ -862,6 +956,7 @@
       document.getElementById('qrColorText').value = '#0F172A';
       document.getElementById('bgColorPicker').value = '#ffffff';
       document.getElementById('bgColorText').value = '#FFFFFF';
+      document.getElementById('frameStyleSelect').value = 'none';
       document.getElementById('qrPasswordInput').value = '';
       document.getElementById('qrExpiryInput').value = '';
       document.getElementById('shortLinkResultBox').classList.add('hidden');
@@ -908,8 +1003,46 @@
     }
 
     function downloadQR(format) {
-      const name = document.getElementById('qrTitleInput').value.trim() || "qrcode";
-      qrcodeObj.download({ name: name, extension: format });
+      const name = document.getElementById('qrTitleInput').value.trim() || "qrcode_pro";
+      
+      if (format === 'png') {
+        const frameType = document.getElementById('frameStyleSelect').value;
+        if (frameType === 'none') {
+          // หากไม่ได้เลือกกรอบ ให้ใช้ระบบดาวน์โหลดปกติ
+          qrcodeObj.download({ name: name, extension: 'png' });
+        } else {
+          // หากมีการเลือกกรอบ ให้ใช้ HTML2Canvas ถ่ายภาพกรอบทั้งหมด
+          const captureEl = document.getElementById('qrFrameDisplay');
+          const btn = event.currentTarget;
+          const originalText = btn.innerHTML;
+          
+          btn.innerHTML = `<span class="font-bold text-sm">กำลังประมวลผล...</span>`;
+          btn.disabled = true;
+
+          html2canvas(captureEl, {
+            scale: 3, // ความละเอียดสูง (High Res)
+            backgroundColor: null,
+            logging: false
+          }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `${name}_framed.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            showToast("ดาวน์โหลดรูปรวมกรอบเรียบร้อยแล้ว", "success");
+          }).catch(err => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            showToast("เกิดข้อผิดพลาดในการสร้างรูปภาพ", "error");
+            console.error(err);
+          });
+        }
+      } else if (format === 'svg') {
+        qrcodeObj.download({ name: name, extension: 'svg' });
+        showToast("ดาวน์โหลดไฟล์ SVG (เฉพาะ QR Code) เรียบร้อยแล้ว", "success");
+      }
     }
 
     // ================= ADMIN DASHBOARD LOGIC =================
