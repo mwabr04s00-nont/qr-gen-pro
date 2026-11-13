@@ -57,13 +57,48 @@
         </div>
       </div>
       
-      <div class="mt-5">
+      <div class="mt-5 max-h-[60vh] overflow-y-auto px-1 hide-scrollbar">
         <input type="hidden" id="editModalId">
-        <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">ข้อมูล / URL ปัจจุบัน</label>
-        <textarea id="editModalUrl" rows="5" class="w-full text-sm px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50 focus:bg-white transition"></textarea>
+        <input type="hidden" id="editModalType">
+
+        <!-- 1. Standard URL / Text / Wi-Fi -->
+        <div id="editModalStandard" class="hidden">
+          <label id="editModalStandardLabel" class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">ข้อมูล / URL ปัจจุบัน</label>
+          <textarea id="editModalStandardInput" rows="4" class="w-full text-sm px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50 focus:bg-white transition"></textarea>
+        </div>
+
+        <!-- 2. vCard -->
+        <div id="editModalVCard" class="hidden space-y-3">
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">ชื่อ - นามสกุล</label><input id="editVName" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">เบอร์โทรศัพท์</label><input id="editVPhone" type="tel" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">อีเมล</label><input id="editVEmail" type="email" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">บริษัท / องค์กร</label><input id="editVOrg" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+        </div>
+
+        <!-- 3. App Store -->
+        <div id="editModalAppStore" class="hidden space-y-3">
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">ลิงก์ App Store (iOS)</label><input id="editAsIos" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">ลิงก์ Play Store (Android)</label><input id="editAsAndroid" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">ลิงก์สำรอง (เมื่อเปิดบนคอมพิวเตอร์)</label><input id="editAsFallback" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+        </div>
+
+        <!-- 4. Asset -->
+        <div id="editModalAsset" class="hidden space-y-3">
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">รหัสครุภัณฑ์</label><input id="editAssetCode" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">ชื่ออุปกรณ์/ครุภัณฑ์</label><input id="editAssetName" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">แผนก/สถานที่</label><input id="editAssetDept" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">ผู้รับผิดชอบ</label><input id="editAssetOwner" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+        </div>
+
+        <!-- 5. Location -->
+        <div id="editModalLocation" class="hidden space-y-3">
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">ละติจูด (Latitude)</label><input id="editLLat" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">ลองจิจูด (Longitude)</label><input id="editLLng" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 bg-slate-50 focus:bg-white"></div>
+        </div>
+
       </div>
 
-      <div class="flex justify-end gap-3 mt-6">
+      <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
         <button onclick="closeEditModal()" class="px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">ยกเลิก</button>
         <button onclick="saveEditModal()" class="px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-md shadow-indigo-200 cursor-pointer">บันทึกการเปลี่ยนแปลง</button>
       </div>
@@ -1096,7 +1131,7 @@
           <td class="py-4 px-4">${secHtml}</td>
           <td class="py-4 px-4 text-center">${statusBtn}</td>
           <td class="py-4 px-4 text-right space-x-1">
-            <button onclick="openEditModal('${item.id}', \`${item.targetUrl.replace(/"/g, '&quot;')}\`)" class="p-2 rounded-lg bg-slate-50 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 transition" title="แก้ไขลิงก์ปลายทาง">✏️</button>
+            <button onclick="openEditModal('${item.id}', \`${item.targetUrl.replace(/"/g, '&quot;')}\`, '${item.type}')" class="p-2 rounded-lg bg-slate-50 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 transition" title="แก้ไขลิงก์ปลายทาง">✏️</button>
             <button onclick="navigator.clipboard.writeText('${shortLink}').then(()=>showToast('คัดลอกลิงก์แล้ว'))" class="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 transition" title="คัดลอกลิงก์">📋</button>
             <button onclick="deleteQR('${item.id}')" class="p-2 rounded-lg bg-slate-50 hover:bg-red-50 text-slate-500 hover:text-red-600 transition" title="ลบรายการ">🗑️</button>
           </td>
@@ -1106,14 +1141,60 @@
     }
 
     // Modal Edit Logic
-    function openEditModal(id, currentUrl) {
+    function openEditModal(id, currentUrl, type) {
       document.getElementById('editModalId').value = id;
-      document.getElementById('editModalUrl').value = currentUrl;
+      document.getElementById('editModalType').value = type;
+      
       const modal = document.getElementById('editModal');
       const inner = modal.querySelector('div');
       
+      // ซ่อนช่องกรอกทั้งหมดก่อน
+      document.getElementById('editModalStandard').classList.add('hidden');
+      document.getElementById('editModalVCard').classList.add('hidden');
+      document.getElementById('editModalAppStore').classList.add('hidden');
+      document.getElementById('editModalAsset').classList.add('hidden');
+      document.getElementById('editModalLocation').classList.add('hidden');
+
+      // แสดงช่องและแยกข้อมูลตามประเภท
+      if (type === 'vCard') {
+        document.getElementById('editModalVCard').classList.remove('hidden');
+        document.getElementById('editVName').value = currentUrl.match(/N:(.*?)(\n|$)/)?.[1] || "";
+        document.getElementById('editVPhone').value = currentUrl.match(/TEL:(.*?)(\n|$)/)?.[1] || "";
+        document.getElementById('editVEmail').value = currentUrl.match(/EMAIL:(.*?)(\n|$)/)?.[1] || "";
+        document.getElementById('editVOrg').value = currentUrl.match(/ORG:(.*?)(\n|$)/)?.[1] || "";
+      } 
+      else if (type === 'App Store') {
+        document.getElementById('editModalAppStore').classList.remove('hidden');
+        try {
+          const urls = JSON.parse(currentUrl);
+          document.getElementById('editAsIos').value = urls.ios || "";
+          document.getElementById('editAsAndroid').value = urls.android || "";
+          document.getElementById('editAsFallback').value = urls.fallback || "";
+        } catch(e) {}
+      } 
+      else if (type === 'Asset') {
+        document.getElementById('editModalAsset').classList.remove('hidden');
+        document.getElementById('editAssetCode').value = currentUrl.match(/รหัสครุภัณฑ์: (.*?)(\n|$)/)?.[1] || "";
+        document.getElementById('editAssetName').value = currentUrl.match(/ชื่ออุปกรณ์: (.*?)(\n|$)/)?.[1] || "";
+        document.getElementById('editAssetDept').value = currentUrl.match(/สถานที่\/แผนก: (.*?)(\n|$)/)?.[1] || "";
+        document.getElementById('editAssetOwner').value = currentUrl.match(/ผู้รับผิดชอบ: (.*?)(\n|$)/)?.[1] || "";
+      } 
+      else if (type === 'Location') {
+        document.getElementById('editModalLocation').classList.remove('hidden');
+        const geoMatch = currentUrl.match(/geo:(.*),(.*)/);
+        if (geoMatch) {
+          document.getElementById('editLLat').value = geoMatch[1] || "";
+          document.getElementById('editLLng').value = geoMatch[2] || "";
+        }
+      } 
+      else {
+        // สำหรับ Website, YouTube, LINE, Google Form, Text, Wi-Fi
+        document.getElementById('editModalStandard').classList.remove('hidden');
+        document.getElementById('editModalStandardInput').value = currentUrl;
+        document.getElementById('editModalStandardLabel').innerText = (type === 'Wi-Fi') ? 'ข้อมูลการเชื่อมต่อ Wi-Fi' : (type === 'Text' ? 'ข้อความ' : 'URL ปลายทาง');
+      }
+
       modal.classList.remove('hidden');
-      // trigger animation
       setTimeout(() => inner.classList.remove('scale-95'), 10);
     }
 
@@ -1127,7 +1208,38 @@
 
     async function saveEditModal() {
       const id = document.getElementById('editModalId').value;
-      const newUrl = document.getElementById('editModalUrl').value.trim();
+      const type = document.getElementById('editModalType').value;
+      let newUrl = "";
+
+      // รวบรวมข้อมูลกลับเป็น String เพื่อบันทึกลง Database
+      if (type === 'vCard') {
+        const n = document.getElementById('editVName').value;
+        const p = document.getElementById('editVPhone').value;
+        const e = document.getElementById('editVEmail').value;
+        const o = document.getElementById('editVOrg').value;
+        newUrl = `BEGIN:VCARD\nVERSION:3.0\nN:${n}\nTEL:${p}\nEMAIL:${e}\nORG:${o}\nEND:VCARD`;
+      } 
+      else if (type === 'App Store') {
+        const ios = document.getElementById('editAsIos').value;
+        const and = document.getElementById('editAsAndroid').value;
+        const fall = document.getElementById('editAsFallback').value;
+        newUrl = JSON.stringify({ios: ios, android: and, fallback: fall});
+      } 
+      else if (type === 'Asset') {
+        const c = document.getElementById('editAssetCode').value || "-";
+        const n = document.getElementById('editAssetName').value || "-";
+        const d = document.getElementById('editAssetDept').value || "-";
+        const o = document.getElementById('editAssetOwner').value || "-";
+        newUrl = `รหัสครุภัณฑ์: ${c}\nชื่ออุปกรณ์: ${n}\nสถานที่/แผนก: ${d}\nผู้รับผิดชอบ: ${o}`;
+      } 
+      else if (type === 'Location') {
+        const lat = document.getElementById('editLLat').value;
+        const lng = document.getElementById('editLLng').value;
+        newUrl = `geo:${lat},${lng}`;
+      } 
+      else {
+        newUrl = document.getElementById('editModalStandardInput').value.trim();
+      }
       
       if(!newUrl) return showToast("กรุณากรอกลิงก์หรือข้อมูลปลายทาง", "error");
 
@@ -1142,7 +1254,7 @@
       btn.disabled = false;
 
       if(res.success) {
-        showToast("อัปเดตลิงก์ปลายทางเรียบร้อยแล้ว");
+        showToast("อัปเดตข้อมูลปลายทางเรียบร้อยแล้ว");
         closeEditModal();
         fetchSheetData();
       } else {
