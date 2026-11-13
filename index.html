@@ -8,10 +8,10 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts: Inter & Prompt for modern look -->
+  <!-- Google Fonts: Inter & 5 Popular Thai Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Mali:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- QR Code Styling Library (แทนที่ qrcode.js เพื่อรองรับ Logo และรูปทรงต่างๆ) -->
   <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
@@ -282,15 +282,27 @@
                 </div>
               </div>
 
-              <!-- Frame -->
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">กรอบและข้อความ (Frame & CTA)</label>
-                <select id="frameStyleSelect" onchange="renderLiveQR()" class="w-full text-sm px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 shadow-sm">
-                  <option value="none">ไม่มีกรอบ (เฉพาะ QR Code)</option>
-                  <option value="basic">แบบคลาสสิก (มีกรอบ, ข้อความด้านล่าง)</option>
-                  <option value="primary">แบบพรีเมียม (สีทึบ, พื้นหลังตามสี QR)</option>
-                  <option value="badge">แบบป้ายกำกับ (กรอบสีเส้น, ข้อความลอย)</option>
-                </select>
+              <!-- Frame and Font -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">กรอบและข้อความ (Frame & CTA)</label>
+                  <select id="frameStyleSelect" onchange="renderLiveQR()" class="w-full text-sm px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 shadow-sm">
+                    <option value="none">ไม่มีกรอบ (เฉพาะ QR)</option>
+                    <option value="basic">แบบคลาสสิก (มีกรอบ, ข้อความล่าง)</option>
+                    <option value="primary">แบบพรีเมียม (สีทึบ)</option>
+                    <option value="badge">แบบป้ายกำกับ (กรอบสีเส้น)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">ฟอนต์ข้อความ (Font Style)</label>
+                  <select id="fontStyleSelect" onchange="renderLiveQR()" class="w-full text-sm px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 shadow-sm">
+                    <option value="'Prompt', sans-serif">Prompt (ทันสมัย / นิยมสุด)</option>
+                    <option value="'Kanit', sans-serif">Kanit (โฉบเฉี่ยว / สายเทค)</option>
+                    <option value="'Sarabun', sans-serif">Sarabun (ทางการ / อ่านง่าย)</option>
+                    <option value="'Noto Sans Thai', sans-serif">Noto Sans (สากล / มาตรฐาน)</option>
+                    <option value="'Mali', cursive">Mali (น่ารัก / เป็นกันเอง)</option>
+                  </select>
+                </div>
               </div>
 
               <!-- Logo -->
@@ -354,6 +366,10 @@
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
               <h2 class="font-bold text-slate-800 text-sm">Live Preview</h2>
             </div>
+            <button onclick="renderLiveQR()" class="text-xs text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg font-bold transition cursor-pointer flex items-center gap-1.5 border border-indigo-100">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              รีเฟรช
+            </button>
           </div>
 
           <!-- QR Canvas with Frame Feature -->
@@ -788,11 +804,13 @@
         cornersDotOptions: { type: dotStyle === 'rounded' || dotStyle === 'dots' ? 'dot' : 'square' }
       });
 
-      updateFrameStyle(title, darkColor);
+      // หน่วงเวลาเล็กน้อยเพื่อให้ QR โหลดเสร็จก่อนปรับกรอบ (แก้ปัญหาสีค้าง)
+      setTimeout(() => updateFrameStyle(title, darkColor), 50);
     }
 
     function updateFrameStyle(titleText, qrColor) {
       const frameType = document.getElementById('frameStyleSelect').value;
+      const fontStyle = document.getElementById('fontStyleSelect').value;
       const textToDisplay = titleText || "Scan Me!";
       
       const frameContainer = document.getElementById('qrFrameDisplay');
@@ -800,6 +818,7 @@
       const qrcodeWrapper = document.getElementById('qrcodeWrapper');
       
       textContainer.innerText = textToDisplay;
+      textContainer.style.fontFamily = fontStyle;
       
       // Reset Default Classes
       frameContainer.className = "relative inline-flex flex-col items-center justify-center transition-all duration-300";
@@ -957,6 +976,7 @@
       document.getElementById('bgColorPicker').value = '#ffffff';
       document.getElementById('bgColorText').value = '#FFFFFF';
       document.getElementById('frameStyleSelect').value = 'none';
+      document.getElementById('fontStyleSelect').value = "'Prompt', sans-serif";
       document.getElementById('qrPasswordInput').value = '';
       document.getElementById('qrExpiryInput').value = '';
       document.getElementById('shortLinkResultBox').classList.add('hidden');
