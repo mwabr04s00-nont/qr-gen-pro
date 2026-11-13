@@ -114,67 +114,94 @@
       <div class="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl border border-slate-200/60 shadow-xl shadow-slate-200/40 relative z-10">
         
         <div class="mb-6">
-          <label class="block text-[11px] font-bold text-slate-400 mb-3 uppercase tracking-widest">1. เลือกประเภท QR Code</label>
-          <div class="flex overflow-x-auto gap-2 pb-2 hide-scrollbar">
+          <label class="block text-xs font-bold text-slate-400 mb-3 uppercase tracking-widest">1. เลือกประเภท QR Code</label>
+          <div class="flex overflow-x-auto gap-3 pb-3 hide-scrollbar">
             <!-- 1. Website -->
-            <button type="button" onclick="selectType('Website', this)" class="type-btn shrink-0 px-4 py-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 flex items-center gap-2 text-xs font-semibold cursor-pointer transition">
+            <button type="button" onclick="selectType('Website', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
               🔗 ลิงก์เว็บไซต์
             </button>
             <!-- 2. vCard -->
-            <button type="button" onclick="selectType('vCard', this)" class="type-btn shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-xs font-semibold cursor-pointer transition">
+            <button type="button" onclick="selectType('vCard', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
               📇 นามบัตร (vCard)
             </button>
-            <!-- 3. Location -->
-            <button type="button" onclick="selectType('Location', this)" class="type-btn shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-xs font-semibold cursor-pointer transition">
+            <!-- 3. App Store -->
+            <button type="button" onclick="selectType('App Store', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
+              📱 App Store (แยก iOS/Android)
+            </button>
+            <!-- 4. Location -->
+            <button type="button" onclick="selectType('Location', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
               📍 พิกัดแผนที่
             </button>
-            <!-- 4. Google Form -->
-            <button type="button" onclick="selectType('Google Form', this)" class="type-btn shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-xs font-semibold cursor-pointer transition">
+            <!-- 5. Asset Code -->
+            <button type="button" onclick="selectType('Asset', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
+              🏷️ รหัสครุภัณฑ์ (Asset)
+            </button>
+            <!-- 6. Google Form -->
+            <button type="button" onclick="selectType('Google Form', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
               📝 Google Form
             </button>
-            <!-- 5. YouTube -->
-            <button type="button" onclick="selectType('YouTube', this)" class="type-btn shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-xs font-semibold cursor-pointer transition">
+            <!-- 7. YouTube -->
+            <button type="button" onclick="selectType('YouTube', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
               ▶️ YouTube
             </button>
-            <!-- 6. LINE -->
-            <button type="button" onclick="selectType('LINE', this)" class="type-btn shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-xs font-semibold cursor-pointer transition">
+            <!-- 8. LINE -->
+            <button type="button" onclick="selectType('LINE', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
               💬 LINE
             </button>
-            <!-- 7. Wi-Fi -->
-            <button type="button" onclick="selectType('Wi-Fi', this)" class="type-btn shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-xs font-semibold cursor-pointer transition">
+            <!-- 9. Wi-Fi -->
+            <button type="button" onclick="selectType('Wi-Fi', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
               📶 Wi-Fi
+            </button>
+            <!-- 10. Text -->
+            <button type="button" onclick="selectType('Text', this)" class="type-btn shrink-0 px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-semibold cursor-pointer transition shadow-sm">
+              Aa ข้อความ
             </button>
           </div>
         </div>
 
-        <div class="space-y-5">
+        <div class="space-y-6">
           <!-- Dynamic Input Area -->
-          <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-            <label class="block text-[11px] font-bold text-slate-400 mb-3 uppercase tracking-widest">2. ระบุข้อมูล</label>
+          <div class="p-6 bg-slate-50/80 rounded-3xl border border-slate-200/60 shadow-inner">
+            <label class="block text-xs font-bold text-slate-400 mb-4 uppercase tracking-widest">2. ระบุข้อมูล</label>
             
-            <div class="mb-4">
-              <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่ออ้างอิง QR Code (ให้แอดมินจำได้)</label>
-              <input id="qrTitleInput" type="text" placeholder="เช่น แคมเปญลดราคาเดือน 10" class="w-full text-sm px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition" />
+            <div class="mb-5">
+              <label class="block text-sm font-semibold text-slate-700 mb-1.5">ชื่ออ้างอิง QR Code (ให้แอดมินจำได้)</label>
+              <input id="qrTitleInput" type="text" placeholder="เช่น แคมเปญลดราคาเดือน 10" class="w-full text-base px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition shadow-sm" />
             </div>
 
             <!-- Standard URL Input -->
             <div id="urlFieldContainer">
-              <label id="urlFieldLabel" class="block text-xs font-semibold text-slate-700 mb-1">URL เว็บไซต์ / ลิงก์ปลายทาง</label>
-              <input id="qrContentInput" type="text" placeholder="https://example.com" class="w-full text-sm px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono text-slate-600 transition" oninput="renderLiveQR()" />
+              <label id="urlFieldLabel" class="block text-sm font-semibold text-slate-700 mb-1.5">URL เว็บไซต์ / ลิงก์ปลายทาง</label>
+              <input id="qrContentInput" type="text" placeholder="https://example.com" class="w-full text-base px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono text-slate-600 transition shadow-sm" oninput="renderLiveQR()" />
             </div>
 
-            <!-- vCard Inputs (Hidden by default) -->
+            <!-- vCard Inputs -->
             <div id="vcardFieldContainer" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div><label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อ - นามสกุล</label><input id="vName" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500" oninput="buildVCardAndRender()" placeholder="John Doe"></div>
-              <div><label class="block text-xs font-semibold text-slate-700 mb-1">เบอร์โทรศัพท์</label><input id="vPhone" type="tel" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500" oninput="buildVCardAndRender()" placeholder="0812345678"></div>
-              <div><label class="block text-xs font-semibold text-slate-700 mb-1">อีเมล</label><input id="vEmail" type="email" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500" oninput="buildVCardAndRender()" placeholder="john@example.com"></div>
-              <div><label class="block text-xs font-semibold text-slate-700 mb-1">บริษัท / องค์กร</label><input id="vOrg" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500" oninput="buildVCardAndRender()" placeholder="Company Co., Ltd."></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">ชื่อ - นามสกุล</label><input id="vName" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildVCardAndRender()" placeholder="John Doe"></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">เบอร์โทรศัพท์</label><input id="vPhone" type="tel" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildVCardAndRender()" placeholder="0812345678"></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">อีเมล</label><input id="vEmail" type="email" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildVCardAndRender()" placeholder="john@example.com"></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">บริษัท / องค์กร</label><input id="vOrg" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildVCardAndRender()" placeholder="Company Co., Ltd."></div>
             </div>
 
-            <!-- Location Inputs (Hidden by default) -->
+            <!-- App Store Inputs -->
+            <div id="appStoreFieldContainer" class="hidden space-y-4">
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">ลิงก์ App Store (iOS)</label><input id="asIos" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildAppStoreAndRender()" placeholder="https://apps.apple.com/th/app/..."></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">ลิงก์ Play Store (Android)</label><input id="asAndroid" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildAppStoreAndRender()" placeholder="https://play.google.com/store/apps/details?id=..."></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">ลิงก์สำรอง (เมื่อเปิดบนคอมพิวเตอร์)</label><input id="asFallback" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildAppStoreAndRender()" placeholder="https://yourwebsite.com"></div>
+            </div>
+
+            <!-- Asset Inputs -->
+            <div id="assetFieldContainer" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">รหัสครุภัณฑ์</label><input id="assetCode" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildAssetAndRender()" placeholder="ASSET-2026-001"></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">ชื่ออุปกรณ์/ครุภัณฑ์</label><input id="assetName" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildAssetAndRender()" placeholder="MacBook Pro 16-inch"></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">แผนก/สถานที่</label><input id="assetDept" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildAssetAndRender()" placeholder="แผนก IT ชั้น 3"></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">ผู้รับผิดชอบ</label><input id="assetOwner" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildAssetAndRender()" placeholder="นายสมชาย"></div>
+            </div>
+
+            <!-- Location Inputs -->
             <div id="locFieldContainer" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div><label class="block text-xs font-semibold text-slate-700 mb-1">ละติจูด (Latitude)</label><input id="lLat" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500" oninput="buildLocAndRender()" placeholder="13.7563"></div>
-              <div><label class="block text-xs font-semibold text-slate-700 mb-1">ลองจิจูด (Longitude)</label><input id="lLng" type="text" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500" oninput="buildLocAndRender()" placeholder="100.5018"></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">ละติจูด (Latitude)</label><input id="lLat" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildLocAndRender()" placeholder="13.7563"></div>
+              <div><label class="block text-sm font-semibold text-slate-700 mb-1.5">ลองจิจูด (Longitude)</label><input id="lLng" type="text" class="w-full text-base px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 shadow-sm" oninput="buildLocAndRender()" placeholder="100.5018"></div>
             </div>
           </div>
 
@@ -227,40 +254,46 @@
 
               <!-- Logo -->
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">แทรกโลโก้ตรงกลาง (Logo)</label>
-                <select id="logoSelect" onchange="handleLogoChange()" class="w-full text-xs px-3 py-2.5 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 mb-2">
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">แทรกโลโก้ตรงกลาง (Logo)</label>
+                <select id="logoSelect" onchange="handleLogoChange()" class="w-full text-sm px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 mb-2 shadow-sm">
                   <option value="">-- ไม่ใส่โลโก้ --</option>
+                  <option value="upload">📁 อัปโหลดรูปภาพเองจากอุปกรณ์ (แนะนำ)</option>
                   <option value="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg">ไอคอน Facebook</option>
                   <option value="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg">ไอคอน LINE</option>
                   <option value="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg">ไอคอน YouTube</option>
-                  <option value="custom">ใส่ URL โลโก้เอง...</option>
+                  <option value="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">ไอคอน Instagram</option>
+                  <option value="custom">🌐 ใส่ URL โลโก้เอง...</option>
                 </select>
-                <input id="customLogoInput" type="text" placeholder="https://example.com/logo.png" class="hidden w-full text-xs px-3 py-2.5 bg-white rounded-xl border border-slate-200 focus:outline-none" oninput="renderLiveQR()" />
-                <p class="text-[10px] text-slate-400">แนะนำ: ใช้รูปทรงจัตุรัสและพื้นหลังโปร่งใส (PNG/SVG)</p>
+                <input id="customLogoInput" type="text" placeholder="https://example.com/logo.png" class="hidden w-full text-sm px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none shadow-sm" oninput="renderLiveQR()" />
+                <input id="customLogoFile" type="file" accept="image/png, image/jpeg, image/svg+xml" class="hidden w-full text-sm px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none shadow-sm cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" onchange="handleLogoUpload(event)" />
+                <p class="text-xs text-slate-500 mt-2">💡 แนะนำ: ใช้รูปทรงจัตุรัสและพื้นหลังโปร่งใส (PNG/SVG)</p>
               </div>
 
             </div>
           </div>
 
           <!-- Security Panel -->
-          <div class="border border-red-100 rounded-2xl overflow-hidden bg-red-50/30">
-            <button type="button" onclick="document.getElementById('securityPanel').classList.toggle('hidden')" class="w-full px-5 py-3.5 flex items-center justify-between text-sm font-bold text-slate-800 hover:bg-red-50/60 transition cursor-pointer">
-              <span class="flex items-center gap-2">🔒 ระบบความปลอดภัย & หมดอายุ</span>
-              <span class="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-md">เพิ่มเติม</span>
+          <div class="border border-red-100 rounded-3xl overflow-hidden bg-red-50/50">
+            <button type="button" onclick="document.getElementById('securityPanel').classList.toggle('hidden')" class="w-full px-6 py-4 flex items-center justify-between text-base font-bold text-slate-800 hover:bg-red-50/80 transition cursor-pointer">
+              <span class="flex items-center gap-2">🔒 ระบบความปลอดภัย & ข้อจำกัด (Enterprise)</span>
+              <span class="text-xs text-red-700 bg-red-100 px-3 py-1.5 rounded-lg">ตั้งค่าเพิ่มเติม</span>
             </button>
-            <div id="securityPanel" class="p-5 border-t border-red-100 hidden space-y-4">
-              <p class="text-[11px] text-slate-500 mb-2">หากต้องการใช้งานฟังก์ชันเหล่านี้ จะต้องบันทึกลง Sheet เพื่อสร้างลิงก์ย่อก่อน (Dynamic QR)</p>
+            <div id="securityPanel" class="p-6 border-t border-red-100 hidden space-y-5 bg-white/50">
+              <p class="text-sm text-slate-600 mb-2 leading-relaxed">
+                ฟังก์ชันเหล่านี้เป็นระบบ <b>Dynamic QR</b> ซึ่งจะต้องบันทึกลงฐานข้อมูลเพื่อสร้าง <b>ลิงก์ย่อ</b> ก่อนนำไปใช้งาน <br/>
+                <span class="text-indigo-600 font-medium">💡 เหมาะสำหรับ: เอกสารลับ, สลิปเงินเดือน, รายงานภายในบริษัท, หรือแคมเปญที่มีระยะเวลาจำกัด เพื่อป้องกันข้อมูลรั่วไหล</span>
+              </p>
               
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">ตั้งรหัสผ่าน (Password Protection)</label>
-                <input id="qrPasswordInput" type="text" placeholder="ปล่อยว่างหากไม่ต้องการตั้งรหัส" class="w-full text-sm px-4 py-2.5 bg-white rounded-xl border border-slate-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition" />
-                <p class="text-[10px] text-slate-400 mt-1">ผู้สแกนจะต้องกรอกรหัสนี้ก่อนเข้าถึงลิงก์ปลายทาง</p>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">ตั้งรหัสผ่าน (Password Protection)</label>
+                <input id="qrPasswordInput" type="text" placeholder="ปล่อยว่างหากไม่ต้องการตั้งรหัส" class="w-full text-base px-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition shadow-sm" />
+                <p class="text-xs text-slate-500 mt-1.5">ผู้สแกนจะต้องกรอกรหัสนี้ให้ถูกต้องก่อนระบบจึงจะพาดำเนินการไปยังลิงก์ปลายทาง</p>
               </div>
 
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">วันหมดอายุ (Expiry Date)</label>
-                <input id="qrExpiryInput" type="date" class="w-full text-sm px-4 py-2.5 bg-white rounded-xl border border-slate-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition" />
-                <p class="text-[10px] text-slate-400 mt-1">เลยวันที่กำหนด QR Code จะไม่สามารถสแกนได้</p>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">วันหมดอายุ (Expiry Date)</label>
+                <input id="qrExpiryInput" type="date" class="w-full text-base px-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition shadow-sm" />
+                <p class="text-xs text-slate-500 mt-1.5">เมื่อเลยวันที่กำหนด QR Code และลิงก์จะถูกระงับการใช้งานอัตโนมัติ</p>
               </div>
             </div>
           </div>
@@ -496,17 +529,18 @@
       }
 
       try {
-        if (actionName) {
-          const response = await fetch(`${GAS_API_URL}?action=${actionName}`);
-          return await response.json();
-        } else {
-          const response = await fetch(GAS_API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(payload)
-          });
-          return await response.json();
+        let finalPayload = payload || {};
+        // แก้ไข: บังคับใช้ POST 100% (แนบ action ลงไปใน Body) เพื่อให้รองรับปริมาณข้อมูลได้ดีกว่าและเสถียรกว่า
+        if (actionName && !finalPayload.action) {
+          finalPayload.action = actionName;
         }
+
+        const response = await fetch(GAS_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(finalPayload)
+        });
+        return await response.json();
       } catch (error) {
         console.error("API Fetch Error:", error);
         return { success: false, error: error.toString() };
@@ -589,6 +623,8 @@
     }
 
     // ================= QR CODE GENERATION LOGIC =================
+    let uploadedLogoBase64 = null;
+
     function initQR() {
       qrcodeObj = new QRCodeStyling({
         width: 300, height: 300, type: "svg", data: "https://example.com",
@@ -600,19 +636,41 @@
       qrcodeObj.append(document.getElementById("qrcode"));
     }
 
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) {
+        uploadedLogoBase64 = null;
+        renderLiveQR();
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        uploadedLogoBase64 = e.target.result; // แปลงเป็น Base64
+        renderLiveQR();
+      };
+      reader.readAsDataURL(file);
+    }
+
     function getSelectedLogo() {
       const sel = document.getElementById('logoSelect').value;
       if (sel === 'custom') return document.getElementById('customLogoInput').value.trim();
+      if (sel === 'upload') return uploadedLogoBase64;
       return sel;
     }
 
     function handleLogoChange() {
       const sel = document.getElementById('logoSelect').value;
       const customInput = document.getElementById('customLogoInput');
+      const fileInput = document.getElementById('customLogoFile');
+      
+      customInput.classList.add('hidden');
+      fileInput.classList.add('hidden');
+
       if (sel === 'custom') {
         customInput.classList.remove('hidden');
+      } else if (sel === 'upload') {
+        fileInput.classList.remove('hidden');
       } else {
-        customInput.classList.add('hidden');
         renderLiveQR();
       }
     }
@@ -656,6 +714,26 @@
       renderLiveQR();
     }
 
+    function buildAssetAndRender() {
+      const c = document.getElementById('assetCode').value || "-";
+      const n = document.getElementById('assetName').value || "-";
+      const d = document.getElementById('assetDept').value || "-";
+      const o = document.getElementById('assetOwner').value || "-";
+      const txt = `รหัสครุภัณฑ์: ${c}\nชื่ออุปกรณ์: ${n}\nสถานที่/แผนก: ${d}\nผู้รับผิดชอบ: ${o}`;
+      document.getElementById('qrContentInput').value = txt;
+      renderLiveQR();
+    }
+
+    function buildAppStoreAndRender() {
+      const ios = document.getElementById('asIos').value || "";
+      const and = document.getElementById('asAndroid').value || "";
+      const fall = document.getElementById('asFallback').value || "";
+      // ซ่อนข้อมูลในรูปแบบ JSON เพื่อให้ Backend รับไปตรวจสอบ
+      const payload = JSON.stringify({ios: ios, android: and, fallback: fall});
+      document.getElementById('qrContentInput').value = payload;
+      renderLiveQR();
+    }
+
     function selectType(type, btnEl) {
       currentType = type;
       document.querySelectorAll('.type-btn').forEach(btn => {
@@ -670,10 +748,16 @@
       const urlBox = document.getElementById('urlFieldContainer');
       const vcardBox = document.getElementById('vcardFieldContainer');
       const locBox = document.getElementById('locFieldContainer');
+      const appStoreBox = document.getElementById('appStoreFieldContainer');
+      const assetBox = document.getElementById('assetFieldContainer');
       const label = document.getElementById('urlFieldLabel');
       const input = document.getElementById('qrContentInput');
 
-      urlBox.classList.remove('hidden'); vcardBox.classList.add('hidden'); locBox.classList.add('hidden');
+      urlBox.classList.remove('hidden'); 
+      vcardBox.classList.add('hidden'); 
+      locBox.classList.add('hidden');
+      appStoreBox.classList.add('hidden');
+      assetBox.classList.add('hidden');
 
       if (type === 'vCard') {
         urlBox.classList.add('hidden'); vcardBox.classList.remove('hidden');
@@ -681,6 +765,12 @@
       } else if (type === 'Location') {
         urlBox.classList.add('hidden'); locBox.classList.remove('hidden');
         buildLocAndRender();
+      } else if (type === 'App Store') {
+        urlBox.classList.add('hidden'); appStoreBox.classList.remove('hidden');
+        buildAppStoreAndRender();
+      } else if (type === 'Asset') {
+        urlBox.classList.add('hidden'); assetBox.classList.remove('hidden');
+        buildAssetAndRender();
       } else if (type === 'Wi-Fi') {
         label.innerText = 'รหัส Wi-Fi (Format: WIFI:S:ชื่อ;T:WPA;P:รหัส;;)';
         input.value = ''; input.placeholder = 'WIFI:S:MySSID;T:WPA;P:MyPassword;;'; renderLiveQR();
